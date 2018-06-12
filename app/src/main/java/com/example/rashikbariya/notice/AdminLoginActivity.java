@@ -1,6 +1,5 @@
 package com.example.rashikbariya.notice;
 
-import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -24,33 +23,22 @@ import org.json.JSONObject;
 import java.util.HashMap;
 import java.util.Map;
 
-public class LoginActivity extends AppCompatActivity{
-    private EditText name, password;
-    private Button admin,login;
-    private static final String URL = "https://b-rashik.000webhostapp.com/user_console.php";
+public class AdminLoginActivity extends AppCompatActivity {
+    EditText name, password;
+    Button login;
+    private static final String URL = "https://b-rashik.000webhostapp.com/adminlogin.php";
     private StringRequest request;
     private RequestQueue requestQueue;
-
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.antivity_login);
+        setContentView(R.layout.adminlogin);
 
         name = findViewById(R.id.etname);
         password = findViewById(R.id.etpassword);
         login = findViewById(R.id.btnLogin);
-        admin = findViewById(R.id.btnAdmin);
 
         requestQueue = Volley.newRequestQueue(this);
-
-        admin.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent i = new Intent(LoginActivity.this, AdminLoginActivity.class);
-
-                startActivity(i);
-            }
-        });
 
         login.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -64,8 +52,8 @@ public class LoginActivity extends AppCompatActivity{
 //                                Toast.makeText(getApplicationContext(), "SUCCESS"+jsonObject.getString("success"), Toast.LENGTH_SHORT).show();
 
                             }else {
-                                Toast.makeText(LoginActivity.this, "you are in", Toast.LENGTH_SHORT).show();
-                                startActivity(new Intent(getApplicationContext(),Welcome.class));
+                                Toast.makeText(AdminLoginActivity.this, "you are in", Toast.LENGTH_SHORT).show();
+                                startActivity(new Intent(getApplicationContext(),PostMsg.class));
                             }
                         } catch (JSONException e){
                             e.printStackTrace();
@@ -88,7 +76,6 @@ public class LoginActivity extends AppCompatActivity{
                 requestQueue.add(request);
             }
         });
-
 
 
     }
