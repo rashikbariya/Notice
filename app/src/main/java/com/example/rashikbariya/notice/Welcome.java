@@ -16,21 +16,31 @@ import java.io.BufferedReader;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.util.ArrayList;
+import java.util.List;
 
 public class Welcome extends AppCompatActivity {
 
     ListView listView;
+    ArrayList<Module> modules;
+
+    String title;
+    String description;
+
+
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.welcome);
 
         listView = (ListView) findViewById(R.id.listView);
+
+        modules = new ArrayList<Module>();
         getJSON("https://b-rashik.000webhostapp.com/showdata.php");
     }
 
     private void getJSON(final String urlWebService) {
-        class GetJSON extends AsyncTask<Void,Void,String> {
+        class GetJSON extends AsyncTask<Void, Void, String> {
             @Override
             protected void onPreExecute() {
                 super.onPreExecute();
@@ -67,16 +77,31 @@ public class Welcome extends AppCompatActivity {
         GetJSON getJSON = new GetJSON();
         getJSON.execute();
     }
+
     private void loadIntoListView(String json) throws JSONException {
         JSONArray jsonArray = new JSONArray(json);
-        String[] notice = new String[jsonArray.length()];
+        JSONObject jsonObject;
         for (int i = 0; i < jsonArray.length(); i++) {
+            Module module;
+            module=new Module();
             JSONObject obj = jsonArray.getJSONObject(i);
-            notice[i] = obj.getString("title");
-            notice[i] = obj.getString("description");
-        }
-        ArrayAdapter<String> arrayAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, notice);
-        listView.setAdapter(arrayAdapter);
-    }
 
+            String title= obj.getString("title");
+            String description= obj.getString("description");
+
+            module.setTitle(title);
+            module.setDescription(description);
+
+            modules.add(module);
+
+
+
+        }
+
+        CustomAdapter customAdapter=new CustomAdapter(Welcome.this, modules);
+        customAdapter.notifyDataSetChanged();
+        listView.setAdapter(customAdapter);
+    }
 }
+
+
